@@ -86,7 +86,10 @@ class Body extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.secondary,
         items: [ 
           BottomNavigationBarItem(icon: Icon(Icons.home, color: Theme.of(context).colorScheme.onSecondary), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings, color: Theme.of(context).colorScheme.onSecondary), label: "Settings"),
+          BottomNavigationBarItem(icon: Icon(Icons.poll, color: Theme.of(context).colorScheme.onSecondary), label: "Polls"),
+          BottomNavigationBarItem(icon: Icon(Icons.show_chart, color: Theme.of(context).colorScheme.onSecondary), label: "Stats"),
+          BottomNavigationBarItem(icon: Icon(Icons.help, color: Theme.of(context).colorScheme.onSecondary), label: "Help"),
+          // BottomNavigationBarItem(icon: Icon(Icons.settings, color: Theme.of(context).colorScheme.onSecondary), label: "Settings"),
           ],
       ),
     );
