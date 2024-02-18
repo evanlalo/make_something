@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:make_something/pages/home.dart';
+import 'package:make_something/routes.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
+// final _router = GoRouter(
+//   initialLocation: '/',
+//   routes: [
+//     GoRoute(
+//       name: 'home', // Optional, add name to your routes. Allows you navigate by name instead of path
+//       path: '/',
+//       builder: (context, state) => Home(),
+//     ),
+//     // GoRoute(
+//     //   name: 'page2',
+//     //   path: '/page2',
+//     //   builder: (context, state) => Page2Screen(),
+//     // ),
+//   ],
+// );
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -11,8 +30,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const appName = 'Yardsi';
-    return MaterialApp(
+    return MaterialApp.router(
         title: appName,
+        routerConfig: routes,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
@@ -40,7 +60,8 @@ class MyApp extends StatelessWidget {
             displaySmall: GoogleFonts.pacifico(),
           ),
         ),
-        home: const Body(title: appName));
+    );
+        // home: const Body(title: appName));
   }
 }
 
