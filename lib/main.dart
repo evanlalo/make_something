@@ -61,7 +61,9 @@ class Body extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Placeholder()
+        child: 
+        // routes go here
+        Placeholder()
         // Column(
         //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         //   children: [
