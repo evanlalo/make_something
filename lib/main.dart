@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:make_something/pages/home.dart';
+import 'package:make_something/auth/auth_scope.dart';
 import 'package:make_something/routes.dart';
+import 'package:make_something/theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(StreamAuthScope(child: const MyApp()));
 }
 
 // final _router = GoRouter(
