@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class ScaffoldWithNestedNavigation extends StatelessWidget {
-  const ScaffoldWithNestedNavigation({
+class NavShellNavBar extends StatelessWidget {
+  const NavShellNavBar({
     Key? key,
     required this.navigationShell,
-  }) : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
+  }) : super(key: key ?? const ValueKey('NavShellNavBar'));
   final StatefulNavigationShell navigationShell;
 
   void _goBranch(int index) {
@@ -20,9 +20,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   }
     @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: NavigationBar(
+    return NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         destinations: const [
           NavigationDestination(label: "Home", icon: Icon(Icons.home)),
@@ -31,7 +29,6 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
           NavigationDestination(label: "Help", icon: Icon(Icons.help)),
         ],
         onDestinationSelected: _goBranch,
-      ),
-    );
+      );
   }
 }
