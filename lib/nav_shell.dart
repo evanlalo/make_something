@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:make_something/auth/auth_scope.dart';
 
 class ScaffoldWithNestedNavigation extends StatelessWidget {
   const ScaffoldWithNestedNavigation({
@@ -18,9 +19,19 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
       initialLocation: index == navigationShell.currentIndex,
     );
   }
-    @override
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Yardsi",
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+        ),
+        actions: [IconButton(onPressed: () => StreamAuthScope.of(context).signOut(), icon: Icon(Icons.logout))],
+      ),
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
