@@ -7,7 +7,6 @@ import 'package:make_something/pages/help/help.dart';
 import 'package:make_something/pages/home/home.dart';
 import 'package:make_something/pages/polls/polls.dart';
 import 'package:make_something/pages/stats/stats.dart';
-// import 'package:make_something/pages/settings.dart';
 
 // GoRouter configuration
 final routes = GoRouter(
