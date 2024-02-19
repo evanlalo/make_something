@@ -66,26 +66,15 @@ class StreamAuth {
   /// The interval that automatically signs out the user.
   final int refreshInterval;
 
-  Timer? _timer;
-  Timer _createRefreshTimer() {
-    return Timer(Duration(seconds: refreshInterval), () {
-      _userStreamController.add(null);
-      _timer = null;
-    });
-  }
 
   /// Signs in a user with an artificial delay to mimic async operation.
   Future<void> signIn(String newUserName) async {
     await Future<void>.delayed(const Duration(seconds: 1));
     _userStreamController.add(newUserName);
-    // _timer?.cancel();
-    // _timer = _createRefreshTimer();
   }
 
   /// Signs out the current user.
   Future<void> signOut() async {
-    _timer?.cancel();
-    _timer = null;
     _userStreamController.add(null);
   }
 }
