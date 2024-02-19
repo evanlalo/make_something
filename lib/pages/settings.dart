@@ -12,6 +12,7 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.primary,
+      child: const Text("Settings"),
     );
   }
 }
