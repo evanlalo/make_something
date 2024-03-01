@@ -75,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen>
                       ElevatedButton(
                         onPressed: () async {
                           bool response = await StreamAuthScope.of(context).signIn(emailController.text, passwordController.text);
-                          // bool response = await StreamAuthScope.of(context).signIn("admin@example.com", "admin");
                           setState(() {
                             loggingIn = response;
                           });
