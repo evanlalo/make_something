@@ -84,7 +84,6 @@ class StreamAuth {
     });
 
     if (response.statusCode == 200) {
-      print('Response data: ${response.data}');
       String token = response.data;
       saveToken(token);
       _userStreamController.add(username);

@@ -26,7 +26,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    print("HERERE WE ARE");
     data = getData();
   }
 
