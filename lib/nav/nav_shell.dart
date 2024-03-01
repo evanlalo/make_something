@@ -13,9 +13,8 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NavShellAppBar(key: const Key("app-bar"),),
-      body: navigationShell,
-      bottomNavigationBar: NavShellNavBar(navigationShell: navigationShell)
-    );
+        appBar: NavShellAppBar(key: const Key("app-bar")),
+        body: navigationShell,
+        bottomNavigationBar: NavShellNavBar(navigationShell: navigationShell));
   }
 }
