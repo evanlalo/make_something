@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
+import 'package:dio/dio.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:make_something/services/http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// A scope that provides [StreamAuth] for the subtree.
 class StreamAuthScope extends InheritedNotifier<StreamAuthNotifier> {
@@ -66,15 +69,45 @@ class StreamAuth {
   /// The interval that automatically signs out the user.
   final int refreshInterval;
 
-
   /// Signs in a user with an artificial delay to mimic async operation.
-  Future<void> signIn(String newUserName) async {
-    await Future<void>.delayed(const Duration(seconds: 1));
-    _userStreamController.add(newUserName);
+  Future<bool> signIn(String username, String password) async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+
+    final dioObj = DioInterceptor();
+
+    final response =
+        await dioObj.dio.post('http://127.0.0.1:8000/api/token', data: {
+      "email": username,
+      "password": password,
+      "device_name": iosInfo.identifierForVendor
+    });
+
+    if (response.statusCode == 200) {
+      String token = response.data;
+      saveToken(token);
+      _userStreamController.add(username);
+
+      return true;
+    } else {
+      // Request failed
+      print('Request failed with status: ${response.statusCode}');
+      return false;
+    }
   }
 
   /// Signs out the current user.
   Future<void> signOut() async {
     _userStreamController.add(null);
+  }
+
+  saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+  }
+
+  static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token') as String;
   }
 }
