@@ -1,1 +1,2 @@
-const API_URL = "http://127.0.0.1:8000";
+// ignore: constant_identifier_names
+const API_URL = String.fromEnvironment('API_URL', defaultValue: "https://api-yardgames.darkmode.live");
