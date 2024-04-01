@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 int hexToInteger(String hex) => int.parse(hex, radix: 16);
 
 const primary = "0D3B66";
-
 
 final theme = ThemeData(
   useMaterial3: true,

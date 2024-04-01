@@ -4,21 +4,18 @@ import '../../auth/auth_scope.dart';
 import 'package:make_something/utils/constants.dart';
 
 Dio dio = Dio(BaseOptions(baseUrl: "$API_URL/api"))
-..interceptors.addAll([AuthInterceptor()]);
+  ..interceptors.addAll([AuthInterceptor()]);
 
 class AuthInterceptor extends Interceptor {
   AuthInterceptor();
 
   @override
   void onRequest(
-      RequestOptions options,
-      RequestInterceptorHandler handler,
-      ) async {
-
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // // create a list of the endpoints where you don't need to pass a token.
-    final listOfPaths = <String>[
-      '/token'
-    ];
+    final listOfPaths = <String>['/token'];
 
     // Check if the requested endpoint match in the
     if (listOfPaths.contains(options.path.toString())) {
@@ -28,7 +25,7 @@ class AuthInterceptor extends Interceptor {
 
     // Load your token here and pass to the header
     String? token = await StreamAuth.getToken();
-    options.headers.addAll({'Authorization':  "Bearer $token"});
+    options.headers.addAll({'Authorization': "Bearer $token"});
     return handler.next(options);
   }
 

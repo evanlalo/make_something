@@ -18,17 +18,18 @@ class NavShellNavBar extends StatelessWidget {
       initialLocation: index == navigationShell.currentIndex,
     );
   }
-    @override
+
+  @override
   Widget build(BuildContext context) {
     return NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        destinations: const [
-          NavigationDestination(label: "Home", icon: Icon(Icons.home)),
-          NavigationDestination(label: "Polls", icon: Icon(Icons.poll)),
-          NavigationDestination(label: "Stats", icon: Icon(Icons.show_chart)),
-          NavigationDestination(label: "Help", icon: Icon(Icons.help)),
-        ],
-        onDestinationSelected: _goBranch,
-      );
+      selectedIndex: navigationShell.currentIndex,
+      destinations: const [
+        NavigationDestination(label: "Home", icon: Icon(Icons.home)),
+        NavigationDestination(label: "Polls", icon: Icon(Icons.poll)),
+        NavigationDestination(label: "Stats", icon: Icon(Icons.show_chart)),
+        NavigationDestination(label: "Help", icon: Icon(Icons.help)),
+      ],
+      onDestinationSelected: _goBranch,
+    );
   }
 }
