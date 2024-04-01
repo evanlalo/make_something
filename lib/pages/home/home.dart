@@ -1,9 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:make_something/auth/auth_scope.dart';
-import 'package:http/http.dart' as http;
-import 'package:make_something/utils/constants.dart';
+import 'package:make_something/services/http/http.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,11 +10,9 @@ class Home extends StatefulWidget {
 }
 
 Future<Object> getData() async {
-  String? token = await StreamAuth.getToken();
-  final response = await http.get(Uri.parse("$API_URL/api/games"), headers: {
-    "Authorization": "Bearer $token"
-  });
-  return json.decode(response.body);
+  final response = await dio.get('/games');
+
+  return json.decode(response.toString());
 }
 
 class _HomeState extends State<Home> {

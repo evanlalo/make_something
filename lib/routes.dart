@@ -30,7 +30,6 @@ final routes = GoRouter(
                   const NoTransitionPage(child: Home()),
             ),
           ]),
-
           StatefulShellBranch(routes: [
             GoRoute(
               path: '/polls',
@@ -38,7 +37,6 @@ final routes = GoRouter(
                   const NoTransitionPage(child: Polls()),
             ),
           ]),
-
           StatefulShellBranch(routes: [
             GoRoute(
               path: '/stats',
@@ -46,7 +44,6 @@ final routes = GoRouter(
                   const NoTransitionPage(child: Stats()),
             ),
           ]),
-          
           StatefulShellBranch(routes: [
             GoRoute(
               path: '/help',

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:make_something/services/http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,10 +73,7 @@ class StreamAuth {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
 
-    final dioObj = DioInterceptor();
-
-    final response =
-        await dioObj.dio.post('http://127.0.0.1:8000/api/token', data: {
+    final response = await dio.post('/token', data: {
       "email": username,
       "password": password,
       "device_name": iosInfo.identifierForVendor
