@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:make_something/services/http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:make_something/utils/constants.dart';
-
 
 /// A scope that provides [StreamAuth] for the subtree.
 class StreamAuthScope extends InheritedNotifier<StreamAuthNotifier> {
@@ -75,10 +73,7 @@ class StreamAuth {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
 
-    final dioObj = DioInterceptor();
-
-    final response =
-        await dioObj.dio.post('$API_URL/api/token', data: {
+    final response = await dio.post('/token', data: {
       "email": username,
       "password": password,
       "device_name": iosInfo.identifierForVendor
