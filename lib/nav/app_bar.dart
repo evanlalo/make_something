@@ -25,11 +25,6 @@ class _NavShellAppBarState extends State<NavShellAppBar> {
             ),
       ),
       backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-      actions: [
-        IconButton(
-            onPressed: () => StreamAuthScope.of(context).signOut(),
-            icon: Icon(Icons.logout))
-      ],
     );
   }
 }
