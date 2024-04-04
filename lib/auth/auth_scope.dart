@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:make_something/models/user.dart';
@@ -73,12 +75,22 @@ class StreamAuth {
   /// Signs in a user with an artificial delay to mimic async operation.
   Future<bool> signIn(String username, String password) async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+    dynamic info;
+
+    if (kIsWeb) {
+      var webinfo = await deviceInfo.webBrowserInfo;
+      info = webinfo.toString();
+    } else if (Platform.isIOS) {
+      var ios = await deviceInfo.iosInfo;
+      info = ios.identifierForVendor;
+    }
+
+    logger.d(info);
 
     final response = await dio.post('/token', data: {
       "email": username,
       "password": password,
-      "device_name": iosInfo.identifierForVendor
+      "device_name": info ?? "Unidentified"
     });
 
 
