@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class Admin extends StatefulWidget {
-  const Admin({super.key});
+class Games extends StatefulWidget {
+  const Games({super.key});
 
   @override
-  State<Admin> createState() => _AdminState();
+  State<Games> createState() => _GamesState();
 }
 
-class _AdminState extends State<Admin> {
+class _GamesState extends State<Games> {
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.primary,
-      child: const Text("Admin"),
+      child: const Text("Admin Games"),
     );
   }
 }

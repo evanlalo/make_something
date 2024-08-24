@@ -25,7 +25,7 @@ class AdminNavShellNavBar extends StatelessWidget {
       selectedIndex: navigationShell.currentIndex,
       destinations: const [
         NavigationDestination(label: "Admin", icon: Icon(Icons.home)),
-        NavigationDestination(label: "Admin", icon: Icon(Icons.poll)),
+        NavigationDestination(label: "Games", icon: Icon(Icons.sports_football_rounded)),
       ],
       onDestinationSelected: _goBranch,
     );
