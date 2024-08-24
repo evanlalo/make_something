@@ -19,16 +19,17 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
     final location = GoRouter.of(context).location();
 
     final isCurrentRouteAdmin = location.contains("/admin");
-    
+
     logger.d("CURRENT ROUTE: $location");
     logger.d("IS ADMIN ROUTE: $isCurrentRouteAdmin");
     return Scaffold(
         appBar: NavShellAppBar(key: const Key("app-bar")),
         drawer: AppDrawer(),
         body: navigationShell,
-        bottomNavigationBar: isCurrentRouteAdmin ?
-        AdminNavShellNavBar(navigationShell: navigationShell)
-        :
-        NavShellNavBar(navigationShell: navigationShell));
+        // TODO: Use Switch case for different bottom bars.
+        // IE Normal, admin, profile etc..
+        bottomNavigationBar: isCurrentRouteAdmin
+            ? AdminNavShellNavBar(navigationShell: navigationShell)
+            : NavShellNavBar(navigationShell: navigationShell));
   }
 }
