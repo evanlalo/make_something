@@ -1,6 +1,6 @@
-# make_something
+# Yardsi
 
-A new Flutter project.
+A flutter application for yard games!
 
 ## Getting Started
 
