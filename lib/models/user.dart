@@ -17,6 +17,9 @@ class User {
 
   /// Connect the generated [_$UserToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$UserToJson(this);
+
+  String get initials => firstName[0]+lastName[0].toUpperCase();
+  
 }
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
