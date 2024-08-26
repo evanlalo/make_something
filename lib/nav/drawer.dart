@@ -48,7 +48,7 @@ class AppDrawer extends StatelessWidget {
             ],
           ),
         ),
-        if (user != null && user!.isAdmin)
+        if (user != null && user.isAdmin)
           ListTile(
               title: const Text('Administration'),
               trailing: const Icon(
