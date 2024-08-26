@@ -7,7 +7,6 @@ import 'package:make_something/models/user.dart';
 import 'package:make_something/services/http/http.dart';
 import 'package:make_something/utils/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:make_something/utils/constants.dart';
 
 /// A scope that provides [StreamAuth] for the subtree.
 class StreamAuthScope extends InheritedNotifier<StreamAuthNotifier> {
@@ -86,10 +85,6 @@ class StreamAuth {
       info = ios.identifierForVendor;
     }
 
-    logger.d(info);
-
-    // final response =
-    //     await dioObj.dio.post("$API_URL/api/token", data: {
     final response = await dio.post('/token', data: {
       "email": username,
       "password": password,
@@ -101,7 +96,6 @@ class StreamAuth {
       String token = response.data;
       saveToken(token);
       final userRequest = await dio.get('/user');
-      logger.d(userRequest.data);
       User user = User.fromJson(userRequest.data);
       _userStreamController.add(user);
 

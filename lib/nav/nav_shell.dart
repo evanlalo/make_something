@@ -20,8 +20,6 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
     final isCurrentRouteAdmin = location.contains("/admin");
 
-    logger.d("CURRENT ROUTE: $location");
-    logger.d("IS ADMIN ROUTE: $isCurrentRouteAdmin");
     return Scaffold(
         appBar: NavShellAppBar(key: const Key("app-bar")),
         drawer: AppDrawer(),
