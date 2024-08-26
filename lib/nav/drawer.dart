@@ -25,7 +25,7 @@ class AppDrawer extends StatelessWidget {
                       CircleAvatar(
                         backgroundColor: Colors.brown,
                         maxRadius: 50,
-                        child: Text(user!.initials),
+                        child: Text(user != null? user.initials : ''),
                       )
                     ],
                   ),
@@ -48,7 +48,7 @@ class AppDrawer extends StatelessWidget {
             ],
           ),
         ),
-        if (user.isAdmin)
+        if (user != null && user!.isAdmin)
           ListTile(
               title: const Text('Administration'),
               trailing: const Icon(
