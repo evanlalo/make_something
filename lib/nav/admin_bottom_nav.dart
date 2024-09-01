@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class NavShellNavBar extends StatelessWidget {
-  const NavShellNavBar({
+class AdminNavShellNavBar extends StatelessWidget {
+  const AdminNavShellNavBar({
     Key? key,
     required this.navigationShell,
-  }) : super(key: key ?? const ValueKey('NavShellNavBar'));
+  }) : super(key: key ?? const ValueKey('AdminNavShellNavBar'));
   final StatefulNavigationShell navigationShell;
-
+  
   void _goBranch(int index) {
     navigationShell.goBranch(
       index,
@@ -24,10 +24,8 @@ class NavShellNavBar extends StatelessWidget {
     return NavigationBar(
       selectedIndex: navigationShell.currentIndex,
       destinations: const [
-        NavigationDestination(label: "Home", icon: Icon(Icons.home)),
-        NavigationDestination(label: "Polls", icon: Icon(Icons.poll)),
-        NavigationDestination(label: "Stats", icon: Icon(Icons.show_chart)),
-        NavigationDestination(label: "Help", icon: Icon(Icons.help)),
+        NavigationDestination(label: "Admin", icon: Icon(Icons.home)),
+        NavigationDestination(label: "Games", icon: Icon(Icons.sports_football_rounded)),
       ],
       onDestinationSelected: _goBranch,
     );

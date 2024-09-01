@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
         title: appName,
         routerConfig: routes,
         debugShowCheckedModeBanner: false,
-        theme: theme
-    );
+        theme: theme);
   }
 }

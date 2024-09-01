@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:make_something/models/user.dart';
 import 'package:make_something/services/http/http.dart';
+import 'package:make_something/utils/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:make_something/utils/constants.dart';
 
 /// A scope that provides [StreamAuth] for the subtree.
 class StreamAuthScope extends InheritedNotifier<StreamAuthNotifier> {
@@ -29,7 +31,7 @@ class StreamAuthScope extends InheritedNotifier<StreamAuthNotifier> {
 class StreamAuthNotifier extends ChangeNotifier {
   /// Creates a [StreamAuthNotifier].
   StreamAuthNotifier() : streamAuth = StreamAuth() {
-    streamAuth.onCurrentUserChanged.listen((String? string) {
+    streamAuth.onCurrentUserChanged.listen((User? user) {
       notifyListeners();
     });
   }
@@ -46,15 +48,15 @@ class StreamAuth {
   /// Creates an [StreamAuth] that clear the current user session in
   /// [refeshInterval] second.
   StreamAuth({this.refreshInterval = 20})
-      : _userStreamController = StreamController<String?>.broadcast() {
-    _userStreamController.stream.listen((String? currentUser) {
+      : _userStreamController = StreamController<User?>.broadcast() {
+    _userStreamController.stream.listen((User? currentUser) {
       _currentUser = currentUser;
     });
   }
 
   /// The current user.
-  String? get currentUser => _currentUser;
-  String? _currentUser;
+  User? get currentUser => _currentUser;
+  User? _currentUser;
 
   /// Checks whether current user is signed in with an artificial delay to mimic
   /// async operation.
@@ -64,8 +66,8 @@ class StreamAuth {
   }
 
   /// A stream that notifies when current user has changed.
-  Stream<String?> get onCurrentUserChanged => _userStreamController.stream;
-  final StreamController<String?> _userStreamController;
+  Stream<User?> get onCurrentUserChanged => _userStreamController.stream;
+  final StreamController<User?> _userStreamController;
 
   /// The interval that automatically signs out the user.
   final int refreshInterval;
@@ -73,26 +75,34 @@ class StreamAuth {
   /// Signs in a user with an artificial delay to mimic async operation.
   Future<bool> signIn(String username, String password) async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+    dynamic info;
 
-    final dioObj = DioInterceptor();
+    if (kIsWeb) {
+      var webinfo = await deviceInfo.webBrowserInfo;
+      info = webinfo.toString();
+    } else if (Platform.isIOS) {
+      var ios = await deviceInfo.iosInfo;
+      info = ios.identifierForVendor;
+    }
 
-    final response =
-        await dioObj.dio.post("$API_URL/api/token", data: {
+    final response = await dio.post('/token', data: {
       "email": username,
       "password": password,
-      "device_name": iosInfo.identifierForVendor
+      "device_name": info ?? "Unidentified"
     });
+
 
     if (response.statusCode == 200) {
       String token = response.data;
       saveToken(token);
-      _userStreamController.add(username);
+      final userRequest = await dio.get('/user');
+      User user = User.fromJson(userRequest.data);
+      _userStreamController.add(user);
 
       return true;
     } else {
       // Request failed
-      print('Request failed with status: ${response.statusCode}');
+      logger.e('Request failed with status: ${response.statusCode}');
       return false;
     }
   }
