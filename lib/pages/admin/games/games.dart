@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:make_something/models/game.dart';
+import 'package:make_something/pages/admin/games/game_form.dart';
 import 'package:make_something/services/http/http.dart';
 
 class Games extends StatefulWidget {
@@ -17,13 +18,18 @@ Future<List<Game>> getGames() async {
   return games;
 }
 
-class _GamesState extends State<Games> {
-  late Future<List<Game>> futureGames;
+class _GamesState extends State<Games> with WidgetsBindingObserver {
+  late Future<List<Game>> _futureGames;
 
   @override
   void initState() {
     super.initState();
-    futureGames = getGames();
+    WidgetsBinding.instance.addObserver(this);
+    _futureGames = getGames();
+  }
+
+  void removeGame(game) async {
+    await dio.delete('/games/${game.id}');
   }
 
   @override
@@ -31,39 +37,74 @@ class _GamesState extends State<Games> {
     return Container(
         color: Theme.of(context).colorScheme.background,
         child: FutureBuilder<List<Game>>(
-          future: futureGames,
+          future: getGames(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
-            } else if (snapshot.hasData) {
-              final games = snapshot.data!;
-              return gameCards(games);
-            } else {
-              return const Text("No data available");
             }
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Text("Add some games! Click the \"+\" to start!");
+            }
+            final games = snapshot.data!;
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                    title: Text('Floating SliverAppBar'),
+                    automaticallyImplyLeading: false,
+                    floating: true,
+                    expandedHeight: 100.0,
+                    actions: <Widget>[
+                      IconButton(
+                          icon: const Icon(Icons.add_circle),
+                          tooltip: 'Add new entry',
+                          onPressed: () => {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const GameForm()))
+                              }),
+                    ]),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return Dismissible(
+                          key: Key(games[index].name),
+                          onDismissed: (direction) {
+                            // Handle the dismissal action
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('${games[index].name} removed!'),
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            );
+                            removeGame(games[index]);
+                          },
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Icon(Icons.delete, color: Colors.white),
+                          ),
+                          child: Card(
+                              child: ListTile(
+                            title: Text(games[index].name),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () => {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GameForm(game: games[index],)))
+                              },
+                            ),
+                          )));
+                    },
+                    childCount: games.length,
+                  ),
+                ),
+              ],
+            );
           },
         ));
-  }
-
-  Widget gameCards(List<Game> games) {
-    return ListView.builder(
-      itemCount: games.length,
-      itemBuilder: (context, index) {
-        final game = games[index];
-        return Container(
-          margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-          height: 100,
-          width: double.maxFinite,
-          child: Row(
-            children: [
-              Expanded(flex: 1, child: Text(game.name)),
-              Expanded(flex: 1, child: Text(game.description)),
-              const SizedBox(width: 10),
-            ],
-          ),
-        );
-      },
-    );
   }
 }
