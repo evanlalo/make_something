@@ -46,18 +46,31 @@ class _GameFormState extends State<GameForm> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  Future<bool> saveGame() async {
+  Future<void> saveGame() async {
     final response = await dio.post('/games', data: {
       "name": nameController.text,
       "rules": rulesController.text,
       "active": active
     });
 
-    if (response.statusCode! > 200) {
-      return true;
-    }
+    navigate();
+  }
 
-    return false;
+  Future<void> updateGame() async {
+    final response = await dio.patch('/games/${widget.game?.id}', data: {
+      "name": nameController.text,
+      "rules": rulesController.text,
+      "active": active
+    });
+
+    navigate();
+  }
+
+  void navigate() {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBarWdiget.displaySnackBar("Game added!", context));
+    
+    returnToGames();
   }
 
   void returnToGames() {
@@ -122,14 +135,11 @@ class _GameFormState extends State<GameForm> with TickerProviderStateMixin {
                           ),
                           ElevatedButton(
                             onPressed: () async {
-                              saveGame()
-                                  .then((value) => {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                                SnackBarWdiget.displaySnackBar(
-                                                    "Game added!", context))
-                                      })
-                                  .then((value) => returnToGames());
+                              if (widget.game != null) {
+                                updateGame();
+                              } else {
+                                saveGame();
+                              }
                             },
                             child: const Text('Save'),
                           ),
