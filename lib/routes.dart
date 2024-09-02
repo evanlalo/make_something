@@ -4,6 +4,7 @@ import 'package:make_something/auth/auth_scope.dart';
 import 'package:make_something/auth/page.dart';
 import 'package:make_something/models/user.dart';
 import 'package:make_something/nav/nav_shell.dart';
+import 'package:make_something/pages/admin/games/game_form.dart';
 import 'package:make_something/pages/admin/home/home.dart';
 import 'package:make_something/pages/admin/games/games.dart';
 import 'package:make_something/pages/help/help.dart';
@@ -81,11 +82,18 @@ final routes = GoRouter(
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
-              path: '/admin/games',
-              name: 'adminGames',
-              pageBuilder: (context, state) =>
-                  const NoTransitionPage(child: Games()),
-            ),
+                path: '/admin/games',
+                name: 'adminGames',
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: Games()),
+                routes: [
+                  GoRoute(
+                    path: 'games/add',
+                    name: 'addGame',
+                    pageBuilder: (context, state) =>
+                        const NoTransitionPage(child: GameForm()),
+                  ),
+                ]),
           ]),
         ]),
   ],
