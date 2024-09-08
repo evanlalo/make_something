@@ -26,7 +26,12 @@ final theme = ThemeData(
       fontSize: 30,
       fontStyle: FontStyle.italic,
     ),
-    bodyMedium: GoogleFonts.merriweather(),
+    bodyMedium: GoogleFonts.merriweather(
+      fontSize: 16
+    ),
+    bodySmall: GoogleFonts.merriweather(
+      fontSize: 14
+    ),
     displaySmall: GoogleFonts.pacifico(),
   ),
 );

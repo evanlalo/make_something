@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:make_something/auth/auth_scope.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginScreen extends StatefulWidget {
   /// Creates a [LoginScreen].
@@ -81,8 +82,20 @@ class _LoginScreenState extends State<LoginScreen>
                             loggingIn = response;
                           });
                         },
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity,50),
+                        ),
                         child: const Text('Login'),
                       ),
+                      const Divider(),
+                      SignInButton(
+                        Buttons.GoogleDark,
+                        onPressed: () {},                        
+                      ),
+                      SignInButton(
+                        Buttons.AppleDark,
+                        onPressed: () {},
+                      )
                     ],
                   ))
               ],

@@ -4,8 +4,15 @@ import 'package:make_something/auth/auth_scope.dart';
 import 'package:make_something/routes.dart';
 import 'package:make_something/theme.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 void main() async {
   await dotenv.load(fileName: ".env", isOptional: true);
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(StreamAuthScope(child: const MyApp()));
 }
 

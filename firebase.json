@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"ios":{"default":{"projectId":"yardsi","appId":"1:732455365239:ios:e49ef8bcc54b83a6e2b472","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"yardsi","configurations":{"ios":"1:732455365239:ios:e49ef8bcc54b83a6e2b472","web":"1:732455365239:web:5fc98b36510ce7c3e2b472"}}}}}}
