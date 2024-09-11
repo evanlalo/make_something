@@ -1,6 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:make_something/utils/logging.dart';
-import '../../auth/auth_scope.dart';
 import 'package:make_something/utils/constants.dart';
 
 Dio dio = Dio(BaseOptions(baseUrl: "$API_URL/api"))
@@ -24,8 +22,6 @@ class AuthInterceptor extends Interceptor {
     }
 
     // Load your token here and pass to the header
-    String? token = await StreamAuth.getToken();
-    options.headers.addAll({'Authorization': "Bearer $token"});
     return handler.next(options);
   }
 

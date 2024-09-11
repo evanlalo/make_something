@@ -1,124 +1,53 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:make_something/models/user.dart';
-import 'package:make_something/services/http/http.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:make_something/utils/logging.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// A scope that provides [StreamAuth] for the subtree.
-class StreamAuthScope extends InheritedNotifier<StreamAuthNotifier> {
-  /// Creates a [StreamAuthScope] sign in scope.
-  StreamAuthScope({
-    super.key,
-    required super.child,
-  }) : super(
-          notifier: StreamAuthNotifier(),
-        );
 
-  /// Gets the [StreamAuth].
-  static StreamAuth of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<StreamAuthScope>()!
-        .notifier!
-        .streamAuth;
-  }
-}
-
-/// A class that converts [StreamAuth] into a [ChangeNotifier].
-class StreamAuthNotifier extends ChangeNotifier {
-  /// Creates a [StreamAuthNotifier].
-  StreamAuthNotifier() : streamAuth = StreamAuth() {
-    streamAuth.onCurrentUserChanged.listen((User? user) {
-      notifyListeners();
+class AuthStream extends ChangeNotifier {
+  AuthStream(Stream<dynamic> stream) {
+    _subscription = stream.asBroadcastStream().listen((event) {
+      notifyListeners(); // Notify router when the auth state changes
     });
   }
 
-  /// The stream auth client.
-  final StreamAuth streamAuth;
-}
+  late final StreamSubscription<dynamic> _subscription;
 
-/// An asynchronous log in services mock with stream similar to google_sign_in.
-///
-/// This class adds an artificial delay of 3 second when logging in an user, and
-/// will automatically clear the login session after [refreshInterval].
-class StreamAuth {
-  /// Creates an [StreamAuth] that clear the current user session in
-  /// [refeshInterval] second.
-  StreamAuth({this.refreshInterval = 20})
-      : _userStreamController = StreamController<User?>.broadcast() {
-    _userStreamController.stream.listen((User? currentUser) {
-      _currentUser = currentUser;
-    });
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
-  /// The current user.
-  User? get currentUser => _currentUser;
-  User? _currentUser;
-
-  /// Checks whether current user is signed in with an artificial delay to mimic
-  /// async operation.
-  Future<bool> isSignedIn() async {
-    await Future<void>.delayed(const Duration(milliseconds: 10));
-    return _currentUser != null;
-  }
-
-  /// A stream that notifies when current user has changed.
-  Stream<User?> get onCurrentUserChanged => _userStreamController.stream;
-  final StreamController<User?> _userStreamController;
-
-  /// The interval that automatically signs out the user.
-  final int refreshInterval;
-
-  /// Signs in a user with an artificial delay to mimic async operation.
-  Future<bool> signIn(String username, String password) async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    dynamic info;
-
-    if (kIsWeb) {
-      var webinfo = await deviceInfo.webBrowserInfo;
-      info = webinfo.toString();
-    } else if (Platform.isIOS) {
-      var ios = await deviceInfo.iosInfo;
-      info = ios.identifierForVendor;
+  static Future<void> emailSignIn(String username, String password) async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: username, password: password);
+    } catch (e) {
+      logger.e("Whoops $e");
     }
+  }
 
-    final response = await dio.post('/token', data: {
-      "email": username,
-      "password": password,
-      "device_name": info ?? "Unidentified"
-    });
+  static Future<void> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) return; // Sign-in aborted by user
 
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
-    if (response.statusCode == 200) {
-      String token = response.data;
-      saveToken(token);
-      final userRequest = await dio.get('/user');
-      User user = User.fromJson(userRequest.data);
-      _userStreamController.add(user);
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-      return true;
-    } else {
-      // Request failed
-      logger.e('Request failed with status: ${response.statusCode}');
-      return false;
-    }
+    await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   /// Signs out the current user.
-  Future<void> signOut() async {
-    _userStreamController.add(null);
-  }
-
-  saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
-  }
-
-  static Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token') as String;
-  }
+  static Future<void> signOut() async {
+    FirebaseAuth.instance.signOut();
+  }  
 }

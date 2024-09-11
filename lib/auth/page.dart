@@ -75,22 +75,20 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          bool response = await StreamAuthScope.of(context)
-                              .signIn(emailController.text,
-                                  passwordController.text);
-                          setState(() {
-                            loggingIn = response;
-                          });
+                          await AuthStream.emailSignIn(
+                              emailController.text, passwordController.text);
                         },
                         style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(double.infinity,50),
+                          minimumSize: const Size(double.infinity, 50),
                         ),
                         child: const Text('Login'),
                       ),
                       const Divider(),
                       SignInButton(
                         Buttons.GoogleDark,
-                        onPressed: () {},                        
+                        onPressed: () async {
+                          await AuthStream.signInWithGoogle();
+                        },
                       ),
                       SignInButton(
                         Buttons.AppleDark,
