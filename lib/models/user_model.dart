@@ -3,20 +3,33 @@ import 'package:json_annotation/json_annotation.dart';
 @JsonSerializable()
 class UserModel {
   final String? id;
-  final String? displayName, email;
+  final String? displayName, email, photoURL;
+  final bool? isEmailVerified;
 
   UserModel(
       {required this.id,
       required this.email,
-      this.displayName
-      });
+      this.displayName,
+      this.photoURL,
+      this.isEmailVerified});
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
   /// Connect the generated [_$UserModelToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 
+  String? get avatar {
+    if (displayName != null && displayName!.isNotEmpty) {
+      List<String> nameParts = displayName!.split(' ');
+      if (nameParts.length >= 2) {
+        return nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase();
+      }
+      return displayName![0].toUpperCase();
+    }
 
+    return email![0].toUpperCase();
+  }
 }
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
@@ -32,26 +45,26 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
     };
 
 // User(
-//   displayName: Evan Lalo, 
-//   email: evanslalo@gmail.com, 
+//   displayName: 
+//   email: 
 //   isEmailVerified: true, 
 //   isAnonymous: false, 
 //   metadata: UserMetadata(
 //     creationTime: 2024-09-11 10:22:17.281Z, 
 //     lastSignInTime: 2024-09-11 10:28:34.853Z), 
 //     phoneNumber: null, 
-//     photoURL: https://lh3.googleusercontent.com/a/ACg8ocI9SOD1lOeDryrT0BPqTKKXTXaHHuV4upDiD2WROktL5T4EMg=s96-c, 
+//     photoURL: 
 //     providerData, [
 //       UserInfo(
-//         displayName: Evan Lalo, 
-//         email: evanslalo@gmail.com, 
+//         displayName: 
+//         email: 
 //         phoneNumber: null, 
 //         photoURL: null, 
 //         providerId: google.com, 
-//         uid: 108893708249712526975
+//         uid: 
 //         )
 //         ], 
 // refreshToken: '',
 // tenantId: null, 
-// uid: bq5GNfKyEXUXKjylCQSl5PVFzIA3
+// uid: 
 // )
