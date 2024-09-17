@@ -1,14 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:make_something/auth/auth_scope.dart';
-import 'package:make_something/models/user.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    User? user = StreamAuthScope.of(context).currentUser;
+    // User? user = StreamAuthScope.of(context).currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     return Drawer(
         child: Column(
       children: [
@@ -22,11 +23,17 @@ class AppDrawer extends StatelessWidget {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.brown,
-                        maxRadius: 50,
-                        child: Text(user != null? user.initials : ''),
-                      )
+                      user?.photoURL != null
+                          ? CircleAvatar(
+                              backgroundColor: Colors.brown,
+                              maxRadius: 50,
+                              backgroundImage:
+                                  NetworkImage(user?.photoURL as String))
+                          : const CircleAvatar(
+                              backgroundColor: Colors.brown,
+                              maxRadius: 50,
+                              child: Text("AB"),
+                            )
                     ],
                   ),
                 ),
@@ -48,21 +55,21 @@ class AppDrawer extends StatelessWidget {
             ],
           ),
         ),
-        if (user != null && user.isAdmin)
-          ListTile(
-              title: const Text('Administration'),
-              trailing: const Icon(
-                Icons.admin_panel_settings,
-              ),
-              onTap: () =>
-                  {GoRouter.of(context).go('/admin'), Navigator.pop(context)}),
+        // if (user != null && user.isAdmin)
+        //   ListTile(
+        //       title: const Text('Administration'),
+        //       trailing: const Icon(
+        //         Icons.admin_panel_settings,
+        //       ),
+        //       onTap: () =>
+        //           {GoRouter.of(context).go('/admin'), Navigator.pop(context)}),
         const Divider(),
         Padding(
           padding: const EdgeInsets.only(bottom: 30),
           child: ListTile(
               title: const Text('Sign Out'),
               trailing: const Icon(Icons.logout),
-              onTap: () => StreamAuthScope.of(context).signOut()),
+              onTap: () => AuthStream.signOut()),
         )
       ],
     ));
