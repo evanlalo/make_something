@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:make_something/auth/auth_scope.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginScreen extends StatefulWidget {
   /// Creates a [LoginScreen].
@@ -74,15 +75,25 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          bool response = await StreamAuthScope.of(context)
-                              .signIn(emailController.text,
-                                  passwordController.text);
-                          setState(() {
-                            loggingIn = response;
-                          });
+                          await AuthStream.emailSignIn(
+                              emailController.text, passwordController.text);
                         },
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
                         child: const Text('Login'),
                       ),
+                      const Divider(),
+                      SignInButton(
+                        Buttons.GoogleDark,
+                        onPressed: () async {
+                          await AuthStream.signInWithGoogle();
+                        },
+                      ),
+                      SignInButton(
+                        Buttons.AppleDark,
+                        onPressed: () {},
+                      )
                     ],
                   ))
               ],

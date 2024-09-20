@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:make_something/auth/auth_scope.dart';
 
 class NavShellAppBar extends StatefulWidget implements PreferredSizeWidget {
   NavShellAppBar({required Key key})
