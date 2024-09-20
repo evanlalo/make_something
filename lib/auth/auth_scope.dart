@@ -3,13 +3,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:make_something/models/user_model.dart';
 import 'package:make_something/utils/logging.dart';
 
 /// A scope that provides [StreamAuth] for the subtree.
 
 class AuthStream extends ChangeNotifier {
-  AuthStream(Stream<dynamic> stream) {
-    _subscription = stream.asBroadcastStream().listen((event) {
+  UserModel? _currentUser;
+
+  UserModel? get currentUser => _currentUser;
+
+  AuthStream(Stream<User?> stream) {
+    _subscription = stream.asBroadcastStream().listen((User? firebaseUser) async {
+      if (firebaseUser != null) {
+        _currentUser = await UserModel.createFromFirebaseUser(firebaseUser);
+      } else {
+        _currentUser = null;
+      }
       notifyListeners(); // Notify router when the auth state changes
     });
   }
@@ -26,6 +36,7 @@ class AuthStream extends ChangeNotifier {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: username, password: password);
+      
     } catch (e) {
       logger.e("Whoops $e");
     }

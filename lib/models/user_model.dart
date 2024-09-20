@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
@@ -19,7 +21,36 @@ class UserModel {
   /// Connect the generated [_$UserModelToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 
-  String? get avatar {
+  factory UserModel.fromFirebaseUser(User user) {
+    return UserModel(
+      id: user.uid,
+      email: user.email!,
+      displayName: user.displayName ?? '',
+      photoURL: user.photoURL ?? '',
+    );
+  }
+
+  // Static async method to check if the user exists in Firestore and create the CustomUser
+  static Future<UserModel> createFromFirebaseUser(User firebaseUser) async {
+    // Reference to the Firestore "users" collection
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: firebaseUser.email)
+        .get();
+
+    final userModel = UserModel.fromFirebaseUser(firebaseUser);
+    if (doc.size == 0) {
+      final json = userModel.toJson();
+      json.remove('id');
+      final collection = FirebaseFirestore.instance.collection('users');
+      await collection.doc(userModel.id)
+          .set(json);
+    }
+
+    return userModel;
+  }
+
+  String get avatar {
     if (displayName != null && displayName!.isNotEmpty) {
       List<String> nameParts = displayName!.split(' ');
       if (nameParts.length >= 2) {

@@ -1,15 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:make_something/auth/auth_scope.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // User? user = StreamAuthScope.of(context).currentUser;
-    final user = FirebaseAuth.instance.currentUser;
+    final authStream = Provider.of<AuthStream>(context);
+    final user = authStream.currentUser;
     return Drawer(
         child: Column(
       children: [
@@ -29,10 +29,10 @@ class AppDrawer extends StatelessWidget {
                               maxRadius: 50,
                               backgroundImage:
                                   NetworkImage(user?.photoURL as String))
-                          : const CircleAvatar(
+                          : CircleAvatar(
                               backgroundColor: Colors.brown,
                               maxRadius: 50,
-                              child: Text("AB"),
+                              child: user?.avatar != null ? Text(user?.avatar as String) : const Text("?"),
                             )
                     ],
                   ),
